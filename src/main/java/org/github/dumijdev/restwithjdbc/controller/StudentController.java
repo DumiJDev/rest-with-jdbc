@@ -11,10 +11,10 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("api/v1/students")
 @RestController
 public class StudentController {
-    @GetMapping(params = {"size", "page"})
-    public ResponseEntity<?> findAllStudent(@RequestParam(value = "size", required = false) int size,
-                                            @RequestParam("page") int page) {
-        var paging = new Page(page, size);
+    @GetMapping
+    public ResponseEntity<?> findAllStudent(@RequestParam(value = "size", required = false) Integer size,
+                                            @RequestParam(value = "page", required = false) Integer page) {
+        var paging = new Page(page == null ? 1 : page, size == null ? 50 : size);
 
         return ok(StudentDao.findAll(paging));
     }

@@ -8,17 +8,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+
+//Simulating a service and a repository
 public abstract class StudentDao {
     private static Connection connection = null;
     private static PreparedStatement statement = null;
     private static final String USER = "root";
     private static final String PASSWORD = "";
-    private static final String URL = "jdbc:mysql://localhost:3306/rest_with_jdbc?serverTimezone=UTC";
+    private static final String URL = "jdbc:h2:./db/rest_with_jdbc.db;DB_CLOSE_ON_EXIT=FALSE";
+    private static boolean tableNonCreated = true;
 
     private static Connection createConnection() {
         try {
             var c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(true);
+            if(tableNonCreated) {
+                c.prepareStatement("create table student(id int, name varchar(255), birth_date varchar(30), primary key(id));").execute();
+                tableNonCreated = false;
+            }
             return c;
         } catch (SQLException e) {
             e.printStackTrace();
